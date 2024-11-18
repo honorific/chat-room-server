@@ -7,7 +7,7 @@ export const register = async (req, res) => {
     })
 
     const user = await newUser.save()
-    res.status(201).json(user)
+    res.status(201).json({username: user.username, gender: user.gender})
   } catch (err) {
     console.log(err)
     res.status(401).json('unAuthorized')
