@@ -4,6 +4,7 @@ export const register = async (req, res) => {
   try {
     const newUser = new User({
       username: req.body.username,
+      gender: req.body.gender,
     })
 
     const user = await newUser.save()
