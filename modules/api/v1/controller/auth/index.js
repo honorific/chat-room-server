@@ -24,3 +24,5 @@ export const leave = async (req, res) => {
     res.status(403).json("don't have right to delete")
   }
 }
+
+
