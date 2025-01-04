@@ -6,7 +6,8 @@ export const exist = async (req, res) => {
     if (user) {
       res.status(200).json(true)
     } else {
-      res.status(404).json(false)
+      // cant send 404 error because it will log in console in frontEnd
+      res.status(200).json(false)
     }
   } catch (err) {
     console.log(err)
