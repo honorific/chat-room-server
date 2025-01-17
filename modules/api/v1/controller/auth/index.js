@@ -1,4 +1,5 @@
 import User from '../../models/User.js'
+import jwt from 'jsonwebtoken'
 
 export const register = async (req, res) => {
   try {
@@ -8,7 +9,20 @@ export const register = async (req, res) => {
     })
 
     const user = await newUser.save()
-    res.status(201).json({username: user.username, gender: user.gender})
+    const refreshToken = jwt.sign(
+      {username: user.username},
+      process.env.REFRESH_TOKEN_SECRET,
+    )
+    const accessToken = jwt.sign(
+      {token: refreshToken},
+      process.env.ACCESS_TOKEN_SECRET,
+      {expiresIn: '15s'},
+    )
+    res.status(201).json({
+      username: user.username,
+      gender: user.gender,
+      token: accessToken,
+    })
   } catch (err) {
     console.log(err)
     res.status(401).json('unAuthorized')
@@ -24,5 +38,3 @@ export const leave = async (req, res) => {
     res.status(403).json("don't have right to delete")
   }
 }
-
-
