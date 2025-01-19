@@ -15,7 +15,7 @@ export const register = async (req, res) => {
       process.env.REFRESH_TOKEN_SECRET,
     )
     const newRefreshToken = new Token({
-      refreshTokens: refreshToken,
+      refreshToken,
     })
     try {
       const refreshTokenInDb = await newRefreshToken.save()
