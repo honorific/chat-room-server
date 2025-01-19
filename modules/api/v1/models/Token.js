@@ -2,8 +2,7 @@ import mongoose from 'mongoose'
 
 const TokenSchema = new mongoose.Schema(
   {
-    username: {type: String, required: true, min: 3, max: 20, unique: true},
-    gender: {type: String, required: true, enum: ['male', 'female']},
+    refreshToken: {type: String, required: true, unique: true},
   },
   {timestamps: true},
 )
