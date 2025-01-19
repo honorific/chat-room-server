@@ -1,3 +1,4 @@
+import Token from '../../models/Token.js'
 import User from '../../models/User.js'
 import jwt from 'jsonwebtoken'
 
@@ -13,16 +14,25 @@ export const register = async (req, res) => {
       {username: user.username},
       process.env.REFRESH_TOKEN_SECRET,
     )
-    const accessToken = jwt.sign(
-      {token: refreshToken},
-      process.env.ACCESS_TOKEN_SECRET,
-      {expiresIn: '15s'},
-    )
-    res.status(201).json({
-      username: user.username,
-      gender: user.gender,
-      token: accessToken,
+    const newRefreshToken = new Token({
+      refreshTokens: refreshToken,
     })
+    try {
+      const refreshTokenInDb = await newRefreshToken.save()
+      const accessToken = jwt.sign(
+        {token: refreshTokenInDb},
+        process.env.ACCESS_TOKEN_SECRET,
+        {expiresIn: '15s'},
+      )
+      res.status(201).json({
+        username: user.username,
+        gender: user.gender,
+        token: accessToken,
+      })
+    } catch (err) {
+      console.log(err)
+      res.status(500).json('failed to create token for user')
+    }
   } catch (err) {
     console.log(err)
     res.status(401).json('unAuthorized')
