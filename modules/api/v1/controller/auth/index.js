@@ -4,26 +4,26 @@ import jwt from 'jsonwebtoken'
 
 export const register = async (req, res) => {
   try {
-    const newUser = new User({
-      username: req.body.username,
-      gender: req.body.gender,
-    })
-
-    const user = await newUser.save()
     const refreshToken = jwt.sign(
-      {username: user.username},
+      {username: req.body.username},
       process.env.REFRESH_TOKEN_SECRET,
     )
     const newRefreshToken = new Token({
       refreshToken,
     })
+    const refreshTokenInDb = await newRefreshToken.save()
+    const accessToken = jwt.sign(
+      {token: refreshTokenInDb},
+      process.env.ACCESS_TOKEN_SECRET,
+      {expiresIn: '15s'},
+    )
     try {
-      const refreshTokenInDb = await newRefreshToken.save()
-      const accessToken = jwt.sign(
-        {token: refreshTokenInDb},
-        process.env.ACCESS_TOKEN_SECRET,
-        {expiresIn: '15s'},
-      )
+      const newUser = new User({
+        username: req.body.username,
+        gender: req.body.gender,
+      })
+
+      const user = await newUser.save()
       res.status(201).json({
         username: user.username,
         gender: user.gender,
@@ -31,11 +31,11 @@ export const register = async (req, res) => {
       })
     } catch (err) {
       console.log(err)
-      res.status(500).json('failed to create token for user')
+      res.status(401).json('unAuthorized')
     }
   } catch (err) {
     console.log(err)
-    res.status(401).json('unAuthorized')
+    res.status(500).json('failed to create token for user')
   }
 }
 
