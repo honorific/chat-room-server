@@ -1,10 +1,14 @@
+import jwt from 'jsonwebtoken'
+
 export const verifyAccessToken = async (req, res, next) => {
   jwt.verify(
     req.body.token ?? req.query.token,
     process.env.ACCESS_TOKEN_SECRET,
     (error, _verified) => {
       if (error) {
-        return res.status(401).json('unAuthoried')
+        return res
+          .status(401)
+          .json({success: false, msg: 'unAuthoried in middleware'})
       } else {
         next()
       }
