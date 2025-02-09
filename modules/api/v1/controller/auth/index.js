@@ -15,7 +15,7 @@ export const register = async (req, res) => {
     const accessToken = jwt.sign(
       {token: refreshTokenInDb},
       process.env.ACCESS_TOKEN_SECRET,
-      {expiresIn: '15s'},
+      {expiresIn: '1m'},
     )
     try {
       const newUser = new User({
