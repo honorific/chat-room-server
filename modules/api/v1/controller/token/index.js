@@ -20,7 +20,7 @@ export const getNewAccessToken = async (req, res) => {
             const accessToken = jwt.sign(
               {token: refreshToken},
               process.env.ACCESS_TOKEN_SECRET,
-              {expiresIn: '15s'},
+              {expiresIn: '1m'},
             )
             res.json({token: accessToken})
           } catch (err) {
