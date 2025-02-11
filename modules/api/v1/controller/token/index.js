@@ -1,5 +1,6 @@
 import jwt from 'jsonwebtoken'
 import Token from '../../models/Token.js'
+import {generateAccessToken} from './generateAccessToken.js'
 
 export const getNewAccessToken = async (req, res) => {
   const tokenInURL = req.query.token
@@ -17,11 +18,7 @@ export const getNewAccessToken = async (req, res) => {
         (error, _user) => {
           if (error) return res.status(403).json('you are not signed in')
           try {
-            const accessToken = jwt.sign(
-              {token: refreshToken},
-              process.env.ACCESS_TOKEN_SECRET,
-              {expiresIn: '1m'},
-            )
+            const accessToken = generateAccessToken(refreshToken)
             res.json({token: accessToken})
           } catch (err) {
             console.log(err)

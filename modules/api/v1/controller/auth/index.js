@@ -1,6 +1,7 @@
 import Token from '../../models/Token.js'
 import User from '../../models/User.js'
 import jwt from 'jsonwebtoken'
+import { generateAccessToken } from '../token/generateAccessToken.js'
 
 export const register = async (req, res) => {
   try {
@@ -12,11 +13,7 @@ export const register = async (req, res) => {
       refreshToken,
     })
     const refreshTokenInDb = await newRefreshToken.save()
-    const accessToken = jwt.sign(
-      {token: refreshTokenInDb},
-      process.env.ACCESS_TOKEN_SECRET,
-      {expiresIn: '1m'},
-    )
+    const accessToken = generateAccessToken(refreshTokenInDb)
     try {
       const newUser = new User({
         username: req.body.username,
