@@ -15,3 +15,22 @@ export const verifyAccessToken = async (req, res, next) => {
     },
   )
 }
+
+export const getRefreshTokenFromAccessToken = (req, res, next) => {
+  const tokenInURL = req.query.token
+  try {
+    const {
+      token: {refreshToken},
+    } = jwt.decode(tokenInURL)
+    if (!refreshToken) {
+      res.status(500).json('could not leave the unknown user')
+    } else {
+      req.refToken = refreshToken
+      console.log('refToken is: ', req.refToken)
+      next()
+    }
+  } catch (err) {
+    console.log(err)
+    res.status(500).json('could not leave the unknown user')
+  }
+}
