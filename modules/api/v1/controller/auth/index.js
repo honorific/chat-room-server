@@ -1,7 +1,7 @@
 import Token from '../../models/Token.js'
 import User from '../../models/User.js'
 import jwt from 'jsonwebtoken'
-import { generateAccessToken } from '../token/generateAccessToken.js'
+import {generateAccessToken} from '../token/generateAccessToken.js'
 
 export const register = async (req, res) => {
   try {
@@ -37,11 +37,21 @@ export const register = async (req, res) => {
 }
 
 export const leave = async (req, res) => {
-  try {
-    const user = await User.deleteOne({username: req.query.username})
-    res.status(200).json(user)
-  } catch (err) {
-    console.log(err)
-    res.status(403).json("don't have right to delete")
+  if (req.refToken) {
+    try {
+      await Token.deleteOne({refreshToken: req.refToken})
+      try {
+        const user = await User.deleteOne({username: req.query.username})
+        res.status(200).json(user)
+      } catch (err) {
+        console.log(err)
+        res.status(403).json("don't have right to delete")
+      }
+    } catch (err) {
+      console.log(err)
+      res.status(400).json('could not delete user token')
+    }
+  } else {
+    res.status(404).json('user token not founded')
   }
 }
