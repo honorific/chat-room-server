@@ -4,7 +4,7 @@ import {getRefreshTokenFromAccessToken} from '../middlewares/auth/index.js'
 
 const router = express.Router()
 
-router.post('/register', register)getRefreshTokenFromAccessToken
-router.delete('/leave', , leave)
+router.post('/register', register)
+router.delete('/leave', getRefreshTokenFromAccessToken, leave)
 
 export default router
