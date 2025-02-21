@@ -2,7 +2,7 @@ import mongoose from 'mongoose'
 
 const messagesSchema = new mongoose.Schema({
   sender: {type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true},
-  receiver: {type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true},
+  conversationId: {type: mongoose.Schema.Types.ObjectId, ref: 'Conversation', required: true},
   dateTime: {type: Date, required: true},
   msg: {type: String, required: true},
 })
