@@ -15,9 +15,7 @@ const membersSchema = new mongoose.Schema({
 
 const ConversationSchema = new mongoose.Schema(
   {
-    members: {
-      type: [membersSchema],
-    },
+    members: membersSchema,
   },
   {timestamps: true},
 )
