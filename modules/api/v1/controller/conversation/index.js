@@ -1,5 +1,6 @@
 import mongoose from 'mongoose'
 import Conversation from '../../models/Conversation.js'
+import User from '../../models/User.js'
 
 export const checkConversationWithTwoIds = async (sender, receiver) => {
   try {
@@ -14,7 +15,7 @@ export const checkConversationWithTwoIds = async (sender, receiver) => {
         },
       },
     ])
-    if (receiverInDb) {
+    if (receiverInDb.length > 0) {
       try {
         const convInDb = await Conversation.findOne({
           $or: [
