@@ -4,6 +4,6 @@ import { verifyAccessToken } from '../middlewares/auth/index.js'
 
 const router = express.Router()
 
-router.post('/room', verifyAccessToken, createRoom)
+router.post('/room/create', verifyAccessToken, createRoom)
 
 export default router
