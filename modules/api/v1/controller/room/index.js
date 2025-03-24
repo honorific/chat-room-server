@@ -18,3 +18,13 @@ export const createRoom = async (req, res) => {
     res.status(500).json('failed to create room')
   }
 }
+
+export const deleteRoom = async (req, res) => {
+  try {
+    const deletedRoom = await Room.deleteOne({roomTitle: req.query.room})
+    res.status(200).json({success: true, info: deletedRoom})
+  } catch (err) {
+    console.log(err)
+    res.status(500).json('could not delete room')
+  }
+}
