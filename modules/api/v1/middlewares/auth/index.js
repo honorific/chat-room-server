@@ -2,7 +2,7 @@ import jwt from 'jsonwebtoken'
 import {generateAccessToken} from '../../controller/token/generateAccessToken.js'
 
 export const verifyAccessToken = async (req, res, next) => {
-  const authHeader = req.headers.authorization
+  const authHeader = req.headers.Authorization
   if (!authHeader || !authHeader.startsWith('Bearer ')) {
     return res.status(401).json({error: 'Unauthorized: No token provided'})
   }
@@ -35,11 +35,15 @@ export const verifyAccessToken = async (req, res, next) => {
 }
 
 export const getRefreshTokenFromAccessToken = (req, res, next) => {
-  const tokenInURL = req.query.token
+  const authHeader = req.headers.authorization
+  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    return res.status(401).json({error: 'Unauthorized: No token provided'})
+  }
+  const tokenInReq = authHeader.split(' ')[1]
   try {
     const {
       token: {refreshToken},
-    } = jwt.decode(tokenInURL)
+    } = jwt.decode(tokenInReq)
     if (!refreshToken) {
       res.status(500).json('could not leave the unknown user')
     } else {
