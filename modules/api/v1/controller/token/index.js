@@ -13,6 +13,7 @@ export const getNewAccessToken = async (req, res) => {
         process.env.REFRESH_TOKEN_SECRET,
         (error, _user) => {
           if (error) return res.status(403).json('you are not signed in')
+            // should remove that expired refresh token here.
           try {
             const accessToken = generateAccessToken(refreshTokenInDb.tokenId)
             res.json({token: accessToken})
