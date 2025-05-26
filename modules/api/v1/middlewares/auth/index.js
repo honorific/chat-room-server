@@ -11,6 +11,10 @@ export const verifyAccessToken = async (req, res, next) => {
     token: {refreshToken},
   } = jwt.decode(tokenInReq)
   console.log('token is in verifyAccessToken: ', authHeader)
+  // get refresh token in correct way,
+  // have to check does refresh token is expired or not.
+  // it is correct to create a new access token if refresh token does not expired
+  // as long as user has valid refresh token, can access.
   if (refreshToken) {
     jwt.verify(
       tokenInReq,
@@ -34,17 +38,16 @@ export const verifyAccessToken = async (req, res, next) => {
   }
 }
 
-export const getRefreshTokenFromAccessToken = (req, res, next) => {
+export const getRefreshTokenFromAccessToken = async (req, res, next) => {
   const authHeader = req.headers.authorization
   if (!authHeader || !authHeader.startsWith('Bearer ')) {
     return res.status(401).json({error: 'Unauthorized: No token provided'})
   }
   const tokenInReq = authHeader.split(' ')[1]
   try {
-    const {
-      token: {refreshToken},
-    } = jwt.decode(tokenInReq)
-    if (!refreshToken) {
+    const refreshTokenInDb = await findRefreshTokenByTokenId(tokenInReq)
+    console.log(refreshTokenInDb)
+    if (!refreshTokenInDb) {
       res.status(500).json('could not leave the unknown user')
     } else {
       req.refToken = refreshToken

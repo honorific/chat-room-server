@@ -1,24 +1,21 @@
 import jwt from 'jsonwebtoken'
-import Token from '../../models/Token.js'
 import {generateAccessToken} from './generateAccessToken.js'
+import {findRefreshTokenByTokenId} from './findRefreshTokenByTokenId.js'
 
 export const getNewAccessToken = async (req, res) => {
   const tokenInURL = req.query.token
   try {
-    const {
-      token: {refreshToken},
-    } = jwt.decode(tokenInURL)
-
-    const refreshTokenInDb = await Token.findOne({refreshToken})
+    const refreshTokenInDb = await findRefreshTokenByTokenId(tokenInURL)
     console.log(refreshTokenInDb)
-    if (refreshTokenInDb) {
+    if (refreshTokenInDb.success) {
       jwt.verify(
-        refreshToken,
+        refreshTokenInDb.refreshToken,
         process.env.REFRESH_TOKEN_SECRET,
         (error, _user) => {
           if (error) return res.status(403).json('you are not signed in')
+            // should remove that expired refresh token here.
           try {
-            const accessToken = generateAccessToken(refreshToken)
+            const accessToken = generateAccessToken(refreshTokenInDb.tokenId)
             res.json({token: accessToken})
           } catch (err) {
             console.log(err)
@@ -27,7 +24,7 @@ export const getNewAccessToken = async (req, res) => {
         },
       )
     } else {
-      res.status(401).json('unAuthoried')
+      res.status(401).json(refreshTokenInDb.msg)
     }
   } catch (err) {
     res.status(404).json('token did not found')

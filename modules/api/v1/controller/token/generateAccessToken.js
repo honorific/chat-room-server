@@ -1,10 +1,12 @@
 import jwt from 'jsonwebtoken'
 
-export const generateAccessToken = (refreshToken) => {
+export const generateAccessToken = (tokenId) => {
   const accessToken = jwt.sign(
-    {token: refreshToken},
+    {tokenId},
     process.env.ACCESS_TOKEN_SECRET,
-    {expiresIn: '1m'},
+    {
+      expiresIn: '1m',
+    },
   )
   return accessToken
 }
