@@ -1,12 +1,9 @@
 import jwt from 'jsonwebtoken'
 import {generateAccessToken} from '../../controller/token/generateAccessToken.js'
+import getTokenInRequest from '../../controller/token/getTokenInRequest.js'
 
 export const verifyAccessToken = async (req, res, next) => {
-  const authHeader = req.headers.Authorization
-  if (!authHeader || !authHeader.startsWith('Bearer ')) {
-    return res.status(401).json({error: 'Unauthorized: No token provided'})
-  }
-  const tokenInReq = authHeader.split(' ')[1]
+  const tokenInReq = getTokenInRequest(req.headers.authorization)
   const {
     token: {refreshToken},
   } = jwt.decode(tokenInReq)

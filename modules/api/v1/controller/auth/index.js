@@ -3,7 +3,8 @@ import User from '../../models/User.js'
 import jwt from 'jsonwebtoken'
 import {generateAccessToken} from '../token/generateAccessToken.js'
 import {v4 as uuidv4} from 'uuid'
-import { findRefreshTokenByTokenId } from '../token/findRefreshTokenByTokenId.js'
+import {findRefreshTokenByTokenId} from '../token/findRefreshTokenByTokenId.js'
+import getTokenInRequest from '../token/getTokenInRequest.js'
 
 export const register = async (req, res) => {
   const tokenId = uuidv4()
@@ -41,11 +42,7 @@ export const register = async (req, res) => {
 }
 
 export const leave = async (req, res) => {
-  const authHeader = req.headers.authorization
-  if (!authHeader || !authHeader.startsWith('Bearer ')) {
-    return res.status(401).json({error: 'Unauthorized: No token provided'})
-  }
-  const tokenInReq = authHeader.split(' ')[1]
+  const tokenInReq = getTokenInRequest(req.headers.authorization)
   try {
     const refreshTokenInDb = await findRefreshTokenByTokenId(tokenInReq)
     console.log(refreshTokenInDb)
