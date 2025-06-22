@@ -48,24 +48,3 @@ export const verifyAccessToken = async (req, res, next) => {
   }
 }
 
-export const getRefreshTokenFromAccessToken = async (req, res, next) => {
-  const authHeader = req.headers.authorization
-  if (!authHeader || !authHeader.startsWith('Bearer ')) {
-    return res.status(401).json({error: 'Unauthorized: No token provided'})
-  }
-  const tokenInReq = authHeader.split(' ')[1]
-  try {
-    const refreshTokenInDb = await findRefreshTokenByTokenId(tokenInReq)
-    console.log(refreshTokenInDb)
-    if (!refreshTokenInDb) {
-      res.status(500).json('could not leave the unknown user')
-    } else {
-      req.refToken = refreshToken
-      console.log('refToken is: ', req.refToken)
-      next()
-    }
-  } catch (err) {
-    console.log(err)
-    res.status(500).json('could not leave the unknown user')
-  }
-}
