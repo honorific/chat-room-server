@@ -1,4 +1,4 @@
-import Token from '../../models/Token'
+import Token from '../../models/Token.js'
 
 export const findRefreshTokenByTokenId = async (token) => {
   try {
