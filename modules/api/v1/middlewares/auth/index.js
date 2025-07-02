@@ -7,13 +7,13 @@ export const verifyAccessToken = async (req, res, next) => {
   const tokenInReq = getTokenInRequest(req.headers.authorization)
   console.log('tokenInReq is: ', tokenInReq)
   const {tokenId} = jwt.decode(tokenInReq)
-  
+
   try {
     const refreshTokenInDb = await findRefreshTokenByTokenId(tokenInReq)
     console.log('refreshTokenInDB is: ', refreshTokenInDb)
     if (refreshTokenInDb.success) {
       jwt.verify(
-        refreshTokenInDb,
+        refreshTokenInDb.refreshToken,
         process.env.REFRESH_TOKEN_SECRET,
         (refreshTokenError, _verified) => {
           if (refreshTokenError) {

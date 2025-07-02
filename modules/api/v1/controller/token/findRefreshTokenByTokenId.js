@@ -11,7 +11,7 @@ export const findRefreshTokenByTokenId = async (token) => {
       })
       return {
         success: true,
-        ...refreshToken,
+        refreshToken: refreshToken.refreshToken,
       }
     } catch (err) {
       return {
