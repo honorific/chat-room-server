@@ -1,10 +1,10 @@
 import Token from '../../models/Token.js'
+import jwt from 'jsonwebtoken'
 
 export const findRefreshTokenByTokenId = async (token) => {
   try {
-    const {
-      token: {tokenId},
-    } = jwt.decode(token)
+    const {tokenId} = jwt.decode(token)
+    console.log('tokenId is: ', tokenId)
     try {
       const refreshToken = await Token.findOne({
         tokenId,

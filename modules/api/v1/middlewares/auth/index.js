@@ -5,19 +5,19 @@ import {findRefreshTokenByTokenId} from '../../controller/token/findRefreshToken
 
 export const verifyAccessToken = async (req, res, next) => {
   const tokenInReq = getTokenInRequest(req.headers.authorization)
-  const {
-    token: {tokenId},
-  } = jwt.decode(tokenInReq)
+  console.log('tokenInReq is: ', tokenInReq)
+  const {tokenId} = jwt.decode(tokenInReq)
+  
   try {
     const refreshTokenInDb = await findRefreshTokenByTokenId(tokenInReq)
-    console.log(refreshTokenInDb)
+    console.log('refreshTokenInDB is: ', refreshTokenInDb)
     if (refreshTokenInDb.success) {
       jwt.verify(
         refreshTokenInDb,
         process.env.REFRESH_TOKEN_SECRET,
         (refreshTokenError, _verified) => {
           if (refreshTokenError) {
-            res.status(401).json('unAuthorized')
+            res.status(401).json('unAuthorized in refreshToken')
           } else {
             jwt.verify(
               tokenInReq,
@@ -47,4 +47,3 @@ export const verifyAccessToken = async (req, res, next) => {
     res.status(500).json('error while retrieving refresh token')
   }
 }
-
