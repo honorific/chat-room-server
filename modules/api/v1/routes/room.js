@@ -4,7 +4,7 @@ import {verifyAccessToken} from '../middlewares/auth/index.js'
 
 const router = express.Router()
 
-router.post('/create', verifyAccessToken, createRoom)
-router.delete('/delete', verifyAccessToken, deleteRoom)
+router.post('/create', verifyAccessToken(false), createRoom)
+router.delete('/delete', verifyAccessToken(false), deleteRoom)
 
 export default router
