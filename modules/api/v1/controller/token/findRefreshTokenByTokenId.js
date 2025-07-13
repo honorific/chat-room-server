@@ -6,12 +6,13 @@ export const findRefreshTokenByTokenId = async (token) => {
     const {tokenId} = jwt.decode(token)
     console.log('tokenId is: ', tokenId)
     try {
-      const refreshToken = await Token.findOne({
+      const refreshTokenObj = await Token.findOne({
         tokenId,
       })
+      console.log('refreshTokenObj is: ', refreshTokenObj)
       return {
         success: true,
-        refreshToken: refreshToken.refreshToken,
+        refreshToken: refreshTokenObj.refreshToken,
       }
     } catch (err) {
       return {
