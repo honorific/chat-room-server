@@ -49,6 +49,10 @@ export const leave = async (req, res) => {
     if (refreshTokenInDb.success) {
       try {
         await Token.deleteOne({refreshToken: refreshTokenInDb.refreshToken})
+        console.log(
+          'refreshtoken in db to delete is: ',
+          refreshTokenInDb.refreshToken,
+        )
         try {
           const user = await User.deleteOne({
             username: req.query.username,
